@@ -57,7 +57,7 @@ const XWidgets = defineAsyncComponent(() => import('./classic.widgets.vue'));
 
 const DESKTOP_THRESHOLD = 1100;
 
-const isDesktop = ref(window.innerWidth >= DESKTOP_THRESHOLD);
+let isDesktop = $ref(window.innerWidth >= DESKTOP_THRESHOLD);
 
 let pageMetadata = $ref<null | ComputedRef<PageMetadata>>();
 const widgetsShowing = $ref(false);
@@ -241,7 +241,7 @@ onMounted(() => {
 			border-left: solid 1px var(--divider);
 			border-right: solid 1px var(--divider);
 			border-radius: 0;
-			overflow: clip;
+			overflow: hidden; overflow: clip;
 			--margin: 12px;
 		}
 

@@ -260,7 +260,7 @@ hr {
 ._panel {
 	background: var(--panel);
 	border-radius: var(--radius);
-	overflow: clip;
+	overflow: hidden; overflow: clip;
 }
 
 ._block {
@@ -336,14 +336,6 @@ hr {
 	&:active {
 		border-color: var(--accent);
 	}
-}
-
-._window {
-	background: var(--windowHeader);
-	border-radius: var(--radius);
-	contain: content;
-	-webkit-backdrop-filter: var(--blur, blur(15px));
-	backdrop-filter: var(--blur, blur(15px));
 }
 
 ._popup {
