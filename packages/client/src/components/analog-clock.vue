@@ -1,24 +1,26 @@
 <template>
 <svg class="mbcofsoe" viewBox="0 0 10 10" preserveAspectRatio="none">
-	<circle
-		v-for="(angle, i) in graduations"
-		:key="i"
-		:cx="5 + (Math.sin(angle) * (5 - graduationsPadding))"
-		:cy="5 - (Math.cos(angle) * (5 - graduationsPadding))"
-		:r="i % 5 == 0 ? 0.125 : 0.05"
-		:fill="i % 5 == 0 ? majorGraduationColor : minorGraduationColor"
-	/>
-
-	<template v-if="props.numbers">
+	<template v-if="props.graduations === 'dots'">
+		<circle
+			v-for="(angle, i) in graduationsMajor"
+			:cx="5 + (Math.sin(angle) * (5 - graduationsPadding))"
+			:cy="5 - (Math.cos(angle) * (5 - graduationsPadding))"
+			:r="0.125"
+			:fill="(props.twentyfour ? h : h % 12) === i ? nowColor : majorGraduationColor"
+			:opacity="!props.fadeGraduations || (props.twentyfour ? h : h % 12) === i ? 1 : Math.max(0, 1 - (angleDiff(hAngle, angle) / Math.PI) - numbersOpacityFactor)"
+		/>
+	</template>
+	<template v-else-if="props.graduations === 'numbers'">
 		<text
 			v-for="(angle, i) in texts"
 			:x="5 + (Math.sin(angle) * (5 - textsPadding))"
 			:y="5 - (Math.cos(angle) * (5 - textsPadding))"
 			text-anchor="middle"
 			dominant-baseline="middle"
-			font-family="Verdana"
-			font-size="0.75"
-			fill="currentColor"
+			:font-size="(props.twentyfour ? h : h % 12) === i ? 1 : 0.7"
+			:font-weight="(props.twentyfour ? h : h % 12) === i ? 'bold' : 'normal'"
+			:fill="(props.twentyfour ? h : h % 12) === i ? nowColor : 'currentColor'"
+			:opacity="!props.fadeGraduations || (props.twentyfour ? h : h % 12) === i ? 1 : Math.max(0, 1 - (angleDiff(hAngle, angle) / Math.PI) - numbersOpacityFactor)"
 		>
 			{{ i === 0 ? (props.twentyfour ? '24' : '12') : i }}
 		</text>
@@ -59,36 +61,47 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import tinycolor from 'tinycolor2';
+import { globalEvents } from '@/events.js';
+
+// https://stackoverflow.com/questions/1878907/how-can-i-find-the-difference-between-two-angles
+const angleDiff = (a: number, b: number) => {
+	const x = Math.abs(a - b);
+	return Math.abs((x + Math.PI) % (Math.PI * 2) - Math.PI);
+};
 
 const graduationsPadding = 0.5;
-const textsPadding = 0.5;
+const textsPadding = 0.6;
 const handsPadding = 1;
 const handsTailLength = 0.7;
 const hHandLengthRatio = 0.75;
 const mHandLengthRatio = 1;
 const sHandLengthRatio = 1;
-const graduations = (() => {
-	const angles: number[] = [];
-	for (let i = 0; i < 60; i++) {
-		const angle = Math.PI * i / 30;
-		angles.push(angle);
-	}
-
-	return angles;
-})();
+const numbersOpacityFactor = 0.35;
 
 const props = withDefaults(defineProps<{
-	numbers?: boolean;
 	thickness?: number;
 	offset?: number;
 	twentyfour?: boolean;
+	graduations?: 'none' | 'dots' | 'numbers';
+	fadeGraduations?: boolean;
 }>(), {
 	numbers: false,
 	thickness: 0.1,
 	offset: 0 - new Date().getTimezoneOffset(),
 	twentyfour: false,
+	graduations: 'dots',
+	fadeGraduations: true,
 });
 
+const graduationsMajor = computed(() => {
+	const angles: number[] = [];
+	const times = props.twentyfour ? 24 : 12;
+	for (let i = 0; i < times; i++) {
+		const angle = Math.PI * i / (times / 2);
+		angles.push(angle);
+	}
+	return angles;
+});
 const texts = computed(() => {
 	const angles: number[] = [];
 	const times = props.twentyfour ? 24 : 12;
@@ -103,13 +116,12 @@ const now = ref(new Date());
 now.value.setMinutes(now.value.getMinutes() + (new Date().getTimezoneOffset() + props.offset));
 
 const enabled = ref(true);
-const computedStyle = getComputedStyle(document.documentElement);
-const dark = computed(() => tinycolor(computedStyle.getPropertyValue('--bg')).isDark());
-const majorGraduationColor = computed(() => dark.value ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)');
-const minorGraduationColor = computed(() => dark.value ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)');
-const sHandColor = computed(() => dark.value ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.3)');
-const mHandColor = computed(() => tinycolor(computedStyle.getPropertyValue('--fg')).toHexString());
-const hHandColor = computed(() => tinycolor(computedStyle.getPropertyValue('--accent')).toHexString());
+const majorGraduationColor = ref<string>();
+const minorGraduationColor = ref<string>();
+const sHandColor = ref<string>();
+const mHandColor = ref<string>();
+const hHandColor = ref<string>();
+const nowColor = ref<string>();
 const s = computed(() => now.value.getSeconds());
 const m = computed(() => now.value.getMinutes());
 const h = computed(() => now.value.getHours());
@@ -122,6 +134,20 @@ function tick() {
 	now.value.setMinutes(now.value.getMinutes() + (new Date().getTimezoneOffset() + props.offset));
 }
 
+function calcColors() {
+	const computedStyle = getComputedStyle(document.documentElement);
+	const dark = tinycolor(computedStyle.getPropertyValue('--bg')).isDark();
+	const accent = tinycolor(computedStyle.getPropertyValue('--accent')).toHexString();
+	majorGraduationColor.value = dark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
+	minorGraduationColor.value = dark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)';
+	sHandColor.value = dark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.3)';
+	mHandColor.value = tinycolor(computedStyle.getPropertyValue('--fg')).toHexString();
+	hHandColor.value = accent;
+	nowColor.value = accent;
+}
+
+calcColors();
+
 onMounted(() => {
 	const update = () => {
 		if (enabled.value) {
@@ -130,10 +156,14 @@ onMounted(() => {
 		}
 	};
 	update();
+
+	globalEvents.on('themeChanged', calcColors);
 });
 
 onBeforeUnmount(() => {
 	enabled.value = false;
+
+	globalEvents.off('themeChanged', calcColors);
 });
 </script>
 

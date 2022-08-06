@@ -1,9 +1,17 @@
 <template>
 <MkContainer :naked="widgetProps.transparent" :show-header="false" class="mkw-clock">
-	<div class="vubelbmv">
-		<div v-if="widgetProps.showLabel" class="label abbrev">{{ tzAbbrev }}</div>
-		<MkAnalogClock class="clock" :thickness="widgetProps.thickness" :offset="tzOffset" :numbers="widgetProps.numbers" :twentyfour="widgetProps.twentyFour"/>
-		<div v-if="widgetProps.showLabel" class="label offset">{{ tzOffsetLabel }}</div>
+	<div class="vubelbmv" :class="widgetProps.size">
+		<div v-if="widgetProps.label === 'tz' || widgetProps.label === 'timeAndTz'" class="_monospace label a abbrev">{{ tzAbbrev }}</div>
+		<MkAnalogClock
+			class="clock"
+			:thickness="widgetProps.thickness"
+			:offset="tzOffset"
+			:graduations="widgetProps.graduations"
+			:fade-graduations="widgetProps.fadeGraduations"
+			:twentyfour="widgetProps.twentyFour"
+		/>
+		<MkDigitalClock v-if="widgetProps.label === 'time' || widgetProps.label === 'timeAndTz'" class="_monospace label c time" :show-s="false" :offset="tzOffset"/>
+		<div v-if="widgetProps.label === 'tz' || widgetProps.label === 'timeAndTz'" class="_monospace label d offset">{{ tzOffsetLabel }}</div>
 	</div>
 </MkContainer>
 </template>
@@ -14,7 +22,9 @@ import { useWidgetPropsManager, Widget, WidgetComponentEmits, WidgetComponentExp
 import { GetFormResultType } from '@/scripts/form';
 import MkContainer from '@/components/ui/container.vue';
 import MkAnalogClock from '@/components/analog-clock.vue';
+import MkDigitalClock from '@/components/digital-clock.vue';
 import { timezones } from '@/scripts/timezones';
+import { i18n } from '@/i18n';
 
 const name = 'clock';
 
@@ -23,9 +33,20 @@ const widgetPropsDef = {
 		type: 'boolean' as const,
 		default: false,
 	},
+	size: {
+		type: 'radio' as const,
+		default: 'medium',
+		options: [{
+			value: 'small', label: i18n.ts.small,
+		}, {
+			value: 'medium', label: i18n.ts.medium,
+		}, {
+			value: 'large', label: i18n.ts.large,
+		}],
+	},
 	thickness: {
 		type: 'radio' as const,
-		default: 0.1,
+		default: 0.2,
 		options: [{
 			value: 0.1, label: 'thin',
 		}, {
@@ -34,17 +55,37 @@ const widgetPropsDef = {
 			value: 0.3, label: 'thick',
 		}],
 	},
-	numbers: {
+	graduations: {
+		type: 'radio' as const,
+		default: 'numbers',
+		options: [{
+			value: 'none', label: 'None',
+		}, {
+			value: 'dots', label: 'Dots',
+		}, {
+			value: 'numbers', label: 'Numbers',
+		}],
+	},
+	fadeGraduations: {
 		type: 'boolean' as const,
-		default: false,
+		default: true,
 	},
 	twentyFour: {
 		type: 'boolean' as const,
 		default: false,
 	},
-	showLabel: {
-		type: 'boolean' as const,
-		default: true,
+	label: {
+		type: 'radio' as const,
+		default: 'none',
+		options: [{
+			value: 'none', label: 'None',
+		}, {
+			value: 'time', label: 'Time',
+		}, {
+			value: 'tz', label: 'TZ',
+		}, {
+			value: 'timeAndTz', label: 'Time + TZ',
+		}],
 	},
 	timezone: {
 		type: 'enum' as const,
@@ -92,28 +133,59 @@ defineExpose<WidgetComponentExpose>({
 
 <style lang="scss" scoped>
 .vubelbmv {
-	padding: 8px;
 	position: relative;
 
 	> .label {
+		position: absolute;
 		opacity: 0.7;
 
-		&.abbrev {
-			position: absolute;
+		&.a {
 			top: 14px;
 			left: 14px;
 		}
 
-		&.offset {
-			position: absolute;
+		&.b {
+			top: 14px;
+			right: 14px;
+		}
+
+		&.c {
+			bottom: 14px;
+			left: 14px;
+		}
+
+		&.d {
 			bottom: 14px;
 			right: 14px;
 		}
 	}
 
 	> .clock {
-		height: 150px;
 		margin: auto;
+	}
+
+	&.small {
+		padding: 12px;
+
+		> .clock {
+			height: 100px;
+		}
+	}
+
+	&.medium {
+		padding: 14px;
+
+		> .clock {
+			height: 150px;
+		}
+	}
+
+	&.large {
+		padding: 16px;
+
+		> .clock {
+			height: 200px;
+		}
 	}
 }
 </style>
