@@ -41,6 +41,11 @@ export default defineConfig(({ command, mode }) => {
 		},
 
 		build: {
+			target: [
+				'chrome108',
+				'firefox109',
+				'safari16',
+			],
 			manifest: 'manifest.json',
 			rollupOptions: {
 				input: {
