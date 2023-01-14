@@ -52,6 +52,7 @@ You should also include the user name that made the change.
 	- 0.12.x未満のプラグインは読み込むことはできません
 - iOS15以下のデバイスはサポートされなくなりました
 - Firefox110以下はサポートされなくなりました
+  - 109でもContainerQueriesのフラグを有効にする事で問題なく使用できます
 
 #### For app developers
 - API: metaのレスポンスに`emojis`プロパティが含まれなくなりました
@@ -76,8 +77,10 @@ You should also include the user name that made the change.
 - 非モデレーターでも、権限を持つロールをアサインされたユーザーはインスタンスの招待コードを発行できるように @syuilo
 - 非モデレーターでも、権限を持つロールをアサインされたユーザーはカスタム絵文字の追加、編集、削除を行えるように @syuilo
 - クリップおよびクリップ内のノートの作成可能数を設定可能に @syuilo
+- ユーザーリストおよびユーザーリスト内のユーザーの作成可能数を設定可能に @syuilo
 - ハードワードミュートの最大文字数を設定可能に @syuilo
 - Webhookの作成可能数を設定可能に @syuilo
+- ノートをピン留めできる数を設定可能に @syuilo
 - Server: signToActivityPubGet is set to true by default @syuilo
 - Server: improve syslog performance @syuilo
 - Server: Use undici instead of node-fetch and got @tamaina
