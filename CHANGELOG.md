@@ -25,6 +25,7 @@ You should also include the user name that made the change.
 - アクティブユーザー数チャートの記録上限値を拡張
 - Playのソースコード上限文字数を2倍に拡張
 - 付箋ウィジェットの高さを設定可能に
+- 配送先サーバーが410 Goneで応答してきた場合は自動で配送停止をするように
 
 ### Bugfixes
 - プロフィールで設定した情報が削除できない問題を修正
@@ -34,6 +35,7 @@ You should also include the user name that made the change.
 - API上で`visibility`を`followers`に設定してrenoteすると連合や削除で不具合が発生する問題を修正
 - AWS S3からのファイル削除でNoSuchKeyエラーが出ると進めらない状態になる問題を修正
 - fix(frontend): Safariでプラグインが複数ある場合に正常に読み込まれない問題を修正
+- Bookwyrmのユーザーのプロフィールページで「リモートで表示」をタップしても反応がない問題を修正
 
 ## 13.9.2 (2023/03/06)
 
