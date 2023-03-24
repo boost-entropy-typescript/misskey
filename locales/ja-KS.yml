@@ -594,7 +594,6 @@ tokenRequested: "アカウントへのアクセス許してやったらどうや
 pluginTokenRequestedDescription: "このプラグインはここで設定した権限を使えるようになるで。"
 notificationType: "通知の種類"
 edit: "編集"
-useStarForReactionFallback: "リアクションがようわからん場合、★を使う"
 emailServer: "メールサーバー"
 enableEmail: "メール配信を受け取る"
 emailConfigInfo: "メールアドレスの確認とかパスワードリセットの時に使うで"
@@ -1875,3 +1874,7 @@ _disabledTimeline:
 _drivecleaner:
   orderBySizeDesc: "サイズのでかい順"
   orderByCreatedAtAsc: "追加日の古い順"
+_webhookSettings:
+  name: "名前"
+  active: "有効"
+
