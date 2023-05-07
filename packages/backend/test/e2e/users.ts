@@ -51,7 +51,7 @@ describe('ユーザー', () => {
 	
 	type User = MeDetailed & { token: string };	
 
-	const show = async (id: string, me = alice): Promise<MeDetailed | UserDetailedNotMe> => {
+	const show = async (id: string, me = root): Promise<MeDetailed | UserDetailedNotMe> => {
 		return successfulApiCall({ endpoint: 'users/show', parameters: { userId: id }, user: me }) as any;
 	};
 
@@ -112,7 +112,6 @@ describe('ユーザー', () => {
 			securityKeys: user.securityKeys,
 			roles: user.roles,
 			memo: user.memo,
-			moderationNote: user.moderationNote,
 		});
 	};
 
@@ -222,8 +221,8 @@ describe('ユーザー', () => {
 	}, 1000 * 60 * 2);
 
 	beforeAll(async () => {
-		root = await signup({ username: 'alice' });
-		alice = root;
+		root = await signup({ username: 'root' });
+		alice = await signup({ username: 'alice' });
 		aliceNote = await post(alice, { text: 'test' }) as any; 
 		alicePage = await page(alice);
 		aliceList = (await api('users/list/create', { name: 'aliceList' }, alice)).body;
