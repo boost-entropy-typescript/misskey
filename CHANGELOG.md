@@ -12,6 +12,11 @@
 
 -->
 
+## 13.13.1 (unreleased)
+
+### Server
+- Fix: api/metaで`TypeError: JSON5.parse is not a function`エラーが発生する問題を修正
+
 ## 13.13.0
 
 ### General
@@ -48,6 +53,7 @@
 - Fix: 無効化されたアンテナにアクセスがあった際に再度有効化するように
 - Fix: お知らせの画像URLを空にできない問題を修正
 - Fix: i/notificationsのsinceIdが機能しない問題を修正
+- Fix: pageのピン留めを解除することができない問題を修正
 
 ## 13.12.2
 
