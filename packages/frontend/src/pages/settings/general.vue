@@ -95,6 +95,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<option value="vertical"><i class="ti ti-carousel-vertical"></i> {{ i18n.ts.vertical }}</option>
 				<option value="horizontal"><i class="ti ti-carousel-horizontal"></i> {{ i18n.ts.horizontal }}</option>
 			</MkRadios>
+
+			<MkButton @click="testNotification">{{ i18n.ts._notification.checkNotificationBehavior }}</MkButton>
 		</div>
 	</FormSection>
 
@@ -174,6 +176,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+import * as Misskey from 'misskey-js';
 import MkSwitch from '@/components/MkSwitch.vue';
 import MkSelect from '@/components/MkSelect.vue';
 import MkRadios from '@/components/MkRadios.vue';
@@ -190,6 +193,8 @@ import { unisonReload } from '@/scripts/unison-reload';
 import { i18n } from '@/i18n';
 import { definePageMetadata } from '@/scripts/page-metadata';
 import { miLocalStorage } from '@/local-storage';
+import { globalEvents } from '@/events';
+import { claimAchievement } from '@/scripts/achievements';
 
 const lang = ref(miLocalStorage.getItem('lang'));
 const fontSize = ref(miLocalStorage.getItem('fontSize'));
@@ -300,6 +305,32 @@ function removeEmojiIndex(lang: string) {
 	}
 
 	os.promiseDialog(main());
+}
+
+let smashCount = 0;
+let smashTimer: number | null = null;
+function testNotification(): void {
+	const notification: Misskey.entities.Notification = {
+		id: Math.random().toString(),
+		createdAt: new Date().toUTCString(),
+		isRead: false,
+		type: 'test',
+	};
+
+	globalEvents.emit('clientNotification', notification);
+
+	// セルフ通知破壊 実績関連
+	smashCount++;
+	if (smashCount >= 10) {
+		claimAchievement('smashTestNotificationButton');
+		smashCount = 0;
+	}
+	if (smashTimer) {
+		clearTimeout(smashTimer);
+	}
+	smashTimer = window.setTimeout(() => {
+		smashCount = 0;
+	}, 300);
 }
 
 const headerActions = $computed(() => []);
