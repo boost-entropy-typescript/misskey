@@ -60,8 +60,8 @@ importers:
         specifier: 3.412.0
         version: 3.412.0
       '@aws-sdk/lib-storage':
-        specifier: 3.412.0
-        version: 3.412.0(@aws-sdk/client-s3@3.412.0)
+        specifier: 3.418.0
+        version: 3.418.0(@aws-sdk/client-s3@3.412.0)
       '@bull-board/api':
         specifier: 5.8.4
         version: 5.8.4(@bull-board/ui@5.8.4)
@@ -340,7 +340,7 @@ importers:
         version: 0.32.6
       sharp-read-bmp:
         specifier: github:misskey-dev/sharp-read-bmp
-        version: github.com/misskey-dev/sharp-read-bmp/02d9dc189fa7df0c4bea09330be26741772dac01
+        version: git@github.com+misskey-dev/sharp-read-bmp/02d9dc189fa7df0c4bea09330be26741772dac01
       slacc:
         specifier: 0.0.10
         version: 0.0.10
@@ -352,7 +352,7 @@ importers:
         version: 2.1.0
       summaly:
         specifier: github:misskey-dev/summaly
-        version: github.com/misskey-dev/summaly/d2d8db49943ccb201c1b1b283e9d0a630519fac7
+        version: git@github.com+misskey-dev/summaly/d2d8db49943ccb201c1b1b283e9d0a630519fac7
       systeminformation:
         specifier: 5.21.8
         version: 5.21.8
@@ -684,7 +684,7 @@ importers:
         version: 5.3.0
       browser-image-resizer:
         specifier: github:misskey-dev/browser-image-resizer#v2.2.1-misskey.3
-        version: github.com/misskey-dev/browser-image-resizer/0227e860621e55cbed0aabe6dc601096a7748c4a
+        version: git@github.com+misskey-dev/browser-image-resizer/0227e860621e55cbed0aabe6dc601096a7748c4a
       buraha:
         specifier: 0.0.1
         version: 0.0.1
@@ -976,10 +976,10 @@ importers:
         version: 7.4.4
       storybook-addon-misskey-theme:
         specifier: github:misskey-dev/storybook-addon-misskey-theme
-        version: github.com/misskey-dev/storybook-addon-misskey-theme/cf583db098365b2ccc81a82f63ca9c93bc32b640(@storybook/blocks@7.4.4)(@storybook/components@7.4.4)(@storybook/core-events@7.4.4)(@storybook/manager-api@7.4.4)(@storybook/preview-api@7.4.4)(@storybook/theming@7.4.4)(@storybook/types@7.4.4)(react-dom@18.2.0)(react@18.2.0)
+        version: git@github.com+misskey-dev/storybook-addon-misskey-theme/cf583db098365b2ccc81a82f63ca9c93bc32b640(@storybook/blocks@7.4.4)(@storybook/components@7.4.4)(@storybook/core-events@7.4.4)(@storybook/manager-api@7.4.4)(@storybook/preview-api@7.4.4)(@storybook/theming@7.4.4)(@storybook/types@7.4.4)(react-dom@18.2.0)(react@18.2.0)
       summaly:
         specifier: github:misskey-dev/summaly
-        version: github.com/misskey-dev/summaly/d2d8db49943ccb201c1b1b283e9d0a630519fac7
+        version: git@github.com+misskey-dev/summaly/d2d8db49943ccb201c1b1b283e9d0a630519fac7
       vite-plugin-turbosnap:
         specifier: 1.0.3
         version: 1.0.3
@@ -1251,20 +1251,20 @@ packages:
       '@aws-sdk/util-user-agent-browser': 3.410.0
       '@aws-sdk/util-user-agent-node': 3.410.0
       '@smithy/config-resolver': 2.0.9
-      '@smithy/fetch-http-handler': 2.1.4
+      '@smithy/fetch-http-handler': 2.1.5
       '@smithy/hash-node': 2.0.8
       '@smithy/invalid-dependency': 2.0.8
       '@smithy/middleware-content-length': 2.0.10
-      '@smithy/middleware-endpoint': 2.0.8
+      '@smithy/middleware-endpoint': 2.0.9
       '@smithy/middleware-retry': 2.0.11
-      '@smithy/middleware-serde': 2.0.8
-      '@smithy/middleware-stack': 2.0.1
+      '@smithy/middleware-serde': 2.0.9
+      '@smithy/middleware-stack': 2.0.3
       '@smithy/node-config-provider': 2.0.11
       '@smithy/node-http-handler': 2.1.5
       '@smithy/protocol-http': 3.0.5
-      '@smithy/smithy-client': 2.1.5
+      '@smithy/smithy-client': 2.1.7
       '@smithy/types': 2.3.3
-      '@smithy/url-parser': 2.0.8
+      '@smithy/url-parser': 2.0.9
       '@smithy/util-base64': 2.0.0
       '@smithy/util-body-length-browser': 2.0.0
       '@smithy/util-body-length-node': 2.1.0
@@ -1295,20 +1295,20 @@ packages:
       '@aws-sdk/util-user-agent-browser': 3.410.0
       '@aws-sdk/util-user-agent-node': 3.410.0
       '@smithy/config-resolver': 2.0.9
-      '@smithy/fetch-http-handler': 2.1.4
+      '@smithy/fetch-http-handler': 2.1.5
       '@smithy/hash-node': 2.0.8
       '@smithy/invalid-dependency': 2.0.8
       '@smithy/middleware-content-length': 2.0.10
-      '@smithy/middleware-endpoint': 2.0.8
+      '@smithy/middleware-endpoint': 2.0.9
       '@smithy/middleware-retry': 2.0.11
-      '@smithy/middleware-serde': 2.0.8
-      '@smithy/middleware-stack': 2.0.1
+      '@smithy/middleware-serde': 2.0.9
+      '@smithy/middleware-stack': 2.0.3
       '@smithy/node-config-provider': 2.0.11
       '@smithy/node-http-handler': 2.1.5
       '@smithy/protocol-http': 3.0.5
-      '@smithy/smithy-client': 2.1.5
+      '@smithy/smithy-client': 2.1.7
       '@smithy/types': 2.3.3
-      '@smithy/url-parser': 2.0.8
+      '@smithy/url-parser': 2.0.9
       '@smithy/util-base64': 2.0.0
       '@smithy/util-body-length-browser': 2.0.0
       '@smithy/util-body-length-node': 2.1.0
@@ -1405,16 +1405,16 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@aws-sdk/lib-storage@3.412.0(@aws-sdk/client-s3@3.412.0):
-    resolution: {integrity: sha512-uAdVtNuip06rJOs28zVrYXLNeHfKraxvJRTzTA+DW1dXkzh70GTKqDKHWH9IJkW/xMTE6wGSM+fDs8jsMOn/yA==}
+  /@aws-sdk/lib-storage@3.418.0(@aws-sdk/client-s3@3.412.0):
+    resolution: {integrity: sha512-XNMzWT2HwUM11udtq3ISiTB14xigOjYMuDDf+RNvAQsCHZpGhMOiEgQQKAITQZz6tHtROJMYLWRPcKywfyxcXQ==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@aws-sdk/client-s3': ^3.0.0
     dependencies:
       '@aws-sdk/client-s3': 3.412.0
       '@smithy/abort-controller': 2.0.9
-      '@smithy/middleware-endpoint': 2.0.8
-      '@smithy/smithy-client': 2.1.5
+      '@smithy/middleware-endpoint': 2.0.9
+      '@smithy/smithy-client': 2.1.7
       buffer: 5.6.0
       events: 3.3.0
       stream-browserify: 3.0.0
@@ -1526,7 +1526,7 @@ packages:
       '@smithy/protocol-http': 3.0.5
       '@smithy/signature-v4': 2.0.5
       '@smithy/types': 2.3.3
-      '@smithy/util-middleware': 2.0.1
+      '@smithy/util-middleware': 2.0.2
       tslib: 2.6.2
     dev: false
 
@@ -1576,22 +1576,22 @@ packages:
       '@aws-sdk/util-user-agent-browser': 3.410.0
       '@aws-sdk/util-user-agent-node': 3.410.0
       '@smithy/config-resolver': 2.0.9
-      '@smithy/fetch-http-handler': 2.1.4
+      '@smithy/fetch-http-handler': 2.1.5
       '@smithy/hash-node': 2.0.8
       '@smithy/invalid-dependency': 2.0.8
       '@smithy/middleware-content-length': 2.0.10
-      '@smithy/middleware-endpoint': 2.0.8
+      '@smithy/middleware-endpoint': 2.0.9
       '@smithy/middleware-retry': 2.0.11
-      '@smithy/middleware-serde': 2.0.8
-      '@smithy/middleware-stack': 2.0.1
+      '@smithy/middleware-serde': 2.0.9
+      '@smithy/middleware-stack': 2.0.3
       '@smithy/node-config-provider': 2.0.11
       '@smithy/node-http-handler': 2.1.5
       '@smithy/property-provider': 2.0.9
       '@smithy/protocol-http': 3.0.5
       '@smithy/shared-ini-file-loader': 2.0.10
-      '@smithy/smithy-client': 2.1.5
+      '@smithy/smithy-client': 2.1.7
       '@smithy/types': 2.3.3
-      '@smithy/url-parser': 2.0.8
+      '@smithy/url-parser': 2.0.9
       '@smithy/util-base64': 2.0.0
       '@smithy/util-body-length-browser': 2.0.0
       '@smithy/util-body-length-node': 2.1.0
@@ -5409,7 +5409,7 @@ packages:
       '@smithy/node-config-provider': 2.0.11
       '@smithy/types': 2.3.3
       '@smithy/util-config-provider': 2.0.0
-      '@smithy/util-middleware': 2.0.1
+      '@smithy/util-middleware': 2.0.2
       tslib: 2.6.2
     dev: false
 
@@ -5420,7 +5420,7 @@ packages:
       '@smithy/node-config-provider': 2.0.11
       '@smithy/property-provider': 2.0.9
       '@smithy/types': 2.3.3
-      '@smithy/url-parser': 2.0.8
+      '@smithy/url-parser': 2.0.9
       tslib: 2.6.2
     dev: false
 
@@ -5470,6 +5470,16 @@ packages:
 
   /@smithy/fetch-http-handler@2.1.4:
     resolution: {integrity: sha512-SL24M9W5ERByoXaVicRx+bj9GJVujDnPn+QO7GY7adhY0mPGa6DSF58pVKsgIh4r5Tx/k3SWCPlH4BxxSxA/fQ==}
+    dependencies:
+      '@smithy/protocol-http': 3.0.5
+      '@smithy/querystring-builder': 2.0.9
+      '@smithy/types': 2.3.3
+      '@smithy/util-base64': 2.0.0
+      tslib: 2.6.2
+    dev: false
+
+  /@smithy/fetch-http-handler@2.1.5:
+    resolution: {integrity: sha512-BIeCHGfr5JCGN+EMTwZK74ELvjPXOIrI7OLM5OhZJJ6AmZyRv2S9ANJk18AtLwht0TsSm+8WoXIEp8LuxNgUyA==}
     dependencies:
       '@smithy/protocol-http': 3.0.5
       '@smithy/querystring-builder': 2.0.9
@@ -5541,10 +5551,21 @@ packages:
     resolution: {integrity: sha512-yOpogfG2d2V0cbJdAJ6GLAWkNOc9pVsL5hZUfXcxJu408N3CUCsXzIAFF6+70ZKSE+lCfG3GFErcSXv/UfUbjw==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@smithy/middleware-serde': 2.0.8
+      '@smithy/middleware-serde': 2.0.9
       '@smithy/types': 2.3.3
-      '@smithy/url-parser': 2.0.8
-      '@smithy/util-middleware': 2.0.1
+      '@smithy/url-parser': 2.0.9
+      '@smithy/util-middleware': 2.0.2
+      tslib: 2.6.2
+    dev: false
+
+  /@smithy/middleware-endpoint@2.0.9:
+    resolution: {integrity: sha512-72/o8R6AAO4+nyTI6h4z6PYGTSA4dr1M7tZz29U8DEUHuh1YkhC77js0P6RyF9G0wDLuYqxb+Yh0crI5WG2pJg==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@smithy/middleware-serde': 2.0.9
+      '@smithy/types': 2.3.3
+      '@smithy/url-parser': 2.0.9
+      '@smithy/util-middleware': 2.0.2
       tslib: 2.6.2
     dev: false
 
@@ -5556,7 +5577,7 @@ packages:
       '@smithy/protocol-http': 3.0.5
       '@smithy/service-error-classification': 2.0.1
       '@smithy/types': 2.3.3
-      '@smithy/util-middleware': 2.0.1
+      '@smithy/util-middleware': 2.0.2
       '@smithy/util-retry': 2.0.1
       tslib: 2.6.2
       uuid: 8.3.2
@@ -5570,8 +5591,24 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /@smithy/middleware-serde@2.0.9:
+    resolution: {integrity: sha512-GVbauxrr6WmtCaesakktg3t5LR/yDbajpC7KkWc8rtCpddMI4ShAVO5Q6DqwX8MDFi4CLaY8H7eTGcxhl3jbLg==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@smithy/types': 2.3.3
+      tslib: 2.6.2
+    dev: false
+
   /@smithy/middleware-stack@2.0.1:
     resolution: {integrity: sha512-UexsfY6/oQZRjTQL56s9AKtMcR60tBNibSgNYX1I2WXaUaXg97W9JCkFyth85TzBWKDBTyhLfenrukS/kyu54A==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@smithy/types': 2.3.3
+      tslib: 2.6.2
+    dev: false
+
+  /@smithy/middleware-stack@2.0.3:
+    resolution: {integrity: sha512-AlhPmbwpkC4lQBVaVHXczmjFvsAhDHhrakqLt038qFLotnJcvDLhmMzAtu23alBeOSkKxkTQq0LsAt2N0WpAbw==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@smithy/types': 2.3.3
@@ -5624,8 +5661,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@smithy/querystring-parser@2.0.8:
-    resolution: {integrity: sha512-ArbanNuR7O/MmTd90ZqhDqGOPPDYmxx3huHxD+R3cuCnazcK/1tGQA+SnnR5307T7ZRb5WTpB6qBggERuibVSA==}
+  /@smithy/querystring-parser@2.0.9:
+    resolution: {integrity: sha512-U6z4N743s4vrcxPW8p8+reLV0PjMCYEyb1/wtMVvv3VnbJ74gshdI8SR1sBnEh95cF8TxonmX5IxY25tS9qGfg==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@smithy/types': 2.3.3
@@ -5655,7 +5692,7 @@ packages:
       '@smithy/is-array-buffer': 2.0.0
       '@smithy/types': 2.3.3
       '@smithy/util-hex-encoding': 2.0.0
-      '@smithy/util-middleware': 2.0.1
+      '@smithy/util-middleware': 2.0.2
       '@smithy/util-uri-escape': 2.0.0
       '@smithy/util-utf8': 2.0.0
       tslib: 2.6.2
@@ -5665,9 +5702,19 @@ packages:
     resolution: {integrity: sha512-7S865uKzsxApM8W8Q6zkij7tcUFgaG8PuADMFdMt1yL/ku3d0+s6Zwrg3N7iXCPM08Gu/mf0BIfTXIu/9i450Q==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@smithy/middleware-stack': 2.0.1
+      '@smithy/middleware-stack': 2.0.3
       '@smithy/types': 2.3.3
-      '@smithy/util-stream': 2.0.11
+      '@smithy/util-stream': 2.0.12
+      tslib: 2.6.2
+    dev: false
+
+  /@smithy/smithy-client@2.1.7:
+    resolution: {integrity: sha512-r6T/oiBQ8vCbGqObH4/h0YqD0jFB1hAS9KFRmuTfaNJueu/L2hjmjqFjv3PV5lkbNHTgUYraSv4cFQ1naxiELQ==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@smithy/middleware-stack': 2.0.3
+      '@smithy/types': 2.3.3
+      '@smithy/util-stream': 2.0.12
       tslib: 2.6.2
     dev: false
 
@@ -5681,7 +5728,15 @@ packages:
   /@smithy/url-parser@2.0.8:
     resolution: {integrity: sha512-wQw7j004ScCrBRJ+oNPXlLE9mtofxyadSZ9D8ov/rHkyurS7z1HTNuyaGRj6OvKsEk0SVQsuY0C9+EfM75XTkw==}
     dependencies:
-      '@smithy/querystring-parser': 2.0.8
+      '@smithy/querystring-parser': 2.0.9
+      '@smithy/types': 2.3.3
+      tslib: 2.6.2
+    dev: false
+
+  /@smithy/url-parser@2.0.9:
+    resolution: {integrity: sha512-NBnJ0NiY8z6E82Xd5VYUFQfKwK/wA/+QkKmpYUYP+cpH3aCzE6g2gvixd9vQKYjsIdRfNPCf+SFAozt8ljozOw==}
+    dependencies:
+      '@smithy/querystring-parser': 2.0.9
       '@smithy/types': 2.3.3
       tslib: 2.6.2
     dev: false
@@ -5727,7 +5782,7 @@ packages:
     engines: {node: '>= 10.0.0'}
     dependencies:
       '@smithy/property-provider': 2.0.9
-      '@smithy/smithy-client': 2.1.5
+      '@smithy/smithy-client': 2.1.7
       '@smithy/types': 2.3.3
       bowser: 2.11.0
       tslib: 2.6.2
@@ -5741,7 +5796,7 @@ packages:
       '@smithy/credential-provider-imds': 2.0.11
       '@smithy/node-config-provider': 2.0.11
       '@smithy/property-provider': 2.0.9
-      '@smithy/smithy-client': 2.1.5
+      '@smithy/smithy-client': 2.1.7
       '@smithy/types': 2.3.3
       tslib: 2.6.2
     dev: false
@@ -5753,8 +5808,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@smithy/util-middleware@2.0.1:
-    resolution: {integrity: sha512-LnsBMi0Mg3gfz/TpNGLv2Jjcz2ra1OX5HR/4IaCepIYmtPQzqMWDdhX/XTW1LS8OZ0xbQuyQPcHkQ+2XkhWOVQ==}
+  /@smithy/util-middleware@2.0.2:
+    resolution: {integrity: sha512-UGPZM+Ja/vke5pc/S8G0LNiHpVirtjppsXO+GK9m9wbzRGzPJTfnZA/gERUUN/AfxEy/8SL7U1kd7u4t2X8K1w==}
     engines: {node: '>=14.0.0'}
     dependencies:
       '@smithy/types': 2.3.3
@@ -5774,7 +5829,21 @@ packages:
     resolution: {integrity: sha512-2MeWfqSpZKdmEJ+tH8CJQSgzLWhH5cmdE24X7JB0hiamXrOmswWGGuPvyj/9sQCTclo57pNxLR2p7KrP8Ahiyg==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      '@smithy/fetch-http-handler': 2.1.4
+      '@smithy/fetch-http-handler': 2.1.5
+      '@smithy/node-http-handler': 2.1.5
+      '@smithy/types': 2.3.3
+      '@smithy/util-base64': 2.0.0
+      '@smithy/util-buffer-from': 2.0.0
+      '@smithy/util-hex-encoding': 2.0.0
+      '@smithy/util-utf8': 2.0.0
+      tslib: 2.6.2
+    dev: false
+
+  /@smithy/util-stream@2.0.12:
+    resolution: {integrity: sha512-FOCpRLaj6gvSyUC5mJAACT+sPMPmp9sD1o+hVbUH/QxwZfulypA3ZIFdAg/59/IY0d/1Q4CTztsiHEB5LgjN4g==}
+    engines: {node: '>=14.0.0'}
+    dependencies:
+      '@smithy/fetch-http-handler': 2.1.5
       '@smithy/node-http-handler': 2.1.5
       '@smithy/types': 2.3.3
       '@smithy/util-base64': 2.0.0
@@ -19584,14 +19653,14 @@ packages:
       readable-stream: 3.6.0
     dev: false
 
-  github.com/misskey-dev/browser-image-resizer/0227e860621e55cbed0aabe6dc601096a7748c4a:
-    resolution: {tarball: https://codeload.github.com/misskey-dev/browser-image-resizer/tar.gz/0227e860621e55cbed0aabe6dc601096a7748c4a}
+  git@github.com+misskey-dev/browser-image-resizer/0227e860621e55cbed0aabe6dc601096a7748c4a:
+    resolution: {commit: 0227e860621e55cbed0aabe6dc601096a7748c4a, repo: git@github.com:misskey-dev/browser-image-resizer.git, type: git}
     name: browser-image-resizer
     version: 2.2.1-misskey.3
     dev: false
 
-  github.com/misskey-dev/sharp-read-bmp/02d9dc189fa7df0c4bea09330be26741772dac01:
-    resolution: {tarball: https://codeload.github.com/misskey-dev/sharp-read-bmp/tar.gz/02d9dc189fa7df0c4bea09330be26741772dac01}
+  git@github.com+misskey-dev/sharp-read-bmp/02d9dc189fa7df0c4bea09330be26741772dac01:
+    resolution: {commit: 02d9dc189fa7df0c4bea09330be26741772dac01, repo: git@github.com:misskey-dev/sharp-read-bmp.git, type: git}
     name: sharp-read-bmp
     version: 1.0.0
     dependencies:
@@ -19600,9 +19669,9 @@ packages:
       sharp: 0.31.3
     dev: false
 
-  github.com/misskey-dev/storybook-addon-misskey-theme/cf583db098365b2ccc81a82f63ca9c93bc32b640(@storybook/blocks@7.4.4)(@storybook/components@7.4.4)(@storybook/core-events@7.4.4)(@storybook/manager-api@7.4.4)(@storybook/preview-api@7.4.4)(@storybook/theming@7.4.4)(@storybook/types@7.4.4)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {tarball: https://codeload.github.com/misskey-dev/storybook-addon-misskey-theme/tar.gz/cf583db098365b2ccc81a82f63ca9c93bc32b640}
-    id: github.com/misskey-dev/storybook-addon-misskey-theme/cf583db098365b2ccc81a82f63ca9c93bc32b640
+  git@github.com+misskey-dev/storybook-addon-misskey-theme/cf583db098365b2ccc81a82f63ca9c93bc32b640(@storybook/blocks@7.4.4)(@storybook/components@7.4.4)(@storybook/core-events@7.4.4)(@storybook/manager-api@7.4.4)(@storybook/preview-api@7.4.4)(@storybook/theming@7.4.4)(@storybook/types@7.4.4)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {commit: cf583db098365b2ccc81a82f63ca9c93bc32b640, repo: git@github.com:misskey-dev/storybook-addon-misskey-theme.git, type: git}
+    id: git@github.com+misskey-dev/storybook-addon-misskey-theme/cf583db098365b2ccc81a82f63ca9c93bc32b640
     name: storybook-addon-misskey-theme
     version: 0.0.0
     peerDependencies:
@@ -19632,8 +19701,8 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  github.com/misskey-dev/summaly/d2d8db49943ccb201c1b1b283e9d0a630519fac7:
-    resolution: {tarball: https://codeload.github.com/misskey-dev/summaly/tar.gz/d2d8db49943ccb201c1b1b283e9d0a630519fac7}
+  git@github.com+misskey-dev/summaly/d2d8db49943ccb201c1b1b283e9d0a630519fac7:
+    resolution: {commit: d2d8db49943ccb201c1b1b283e9d0a630519fac7, repo: git@github.com:misskey-dev/summaly.git, type: git}
     name: summaly
     version: 4.0.2
     dependencies:
