@@ -1126,6 +1126,9 @@ export interface Locale {
     "dateAndTime": string;
     "showRenotes": string;
     "edited": string;
+    "notificationRecieveConfig": string;
+    "mutualFollow": string;
+    "fileAttachedOnly": string;
     "_announcement": {
         "forExistingUsers": string;
         "forExistingUsersDescription": string;
@@ -2281,6 +2284,9 @@ export interface Locale {
         "unmarkSensitiveDriveFile": string;
         "resolveAbuseReport": string;
         "createInvitation": string;
+        "createAd": string;
+        "deleteAd": string;
+        "updateAd": string;
     };
 }
 declare const locales: {
