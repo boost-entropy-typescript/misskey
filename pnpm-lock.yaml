@@ -409,8 +409,8 @@ importers:
         specifier: 1.3.56
         version: 1.3.56
       '@swc/core-linux-arm64-gnu':
-        specifier: 1.3.56
-        version: 1.3.56
+        specifier: 1.3.92
+        version: 1.3.92
       '@swc/core-linux-arm64-musl':
         specifier: 1.3.56
         version: 1.3.56
@@ -7011,15 +7011,6 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
-    optional: true
-
-  /@swc/core-linux-arm64-gnu@1.3.56:
-    resolution: {integrity: sha512-GzsUy/4egJ4cMlxbM+Ub7AMi5CKAc+pxBxrh8MUPQbyStW8jGgnQsJouTnGy0LHawtdEnsCOl6PcO6OgvktXuQ==}
-    engines: {node: '>=10'}
-    cpu: [arm64]
-    os: [linux]
-    requiresBuild: true
-    dev: false
     optional: true
 
   /@swc/core-linux-arm64-gnu@1.3.92:
