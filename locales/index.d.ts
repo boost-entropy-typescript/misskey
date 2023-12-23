@@ -1745,6 +1745,7 @@ export interface Locale {
         "disposable": string;
         "mx": string;
         "smtp": string;
+        "banned": string;
     };
     "_ffVisibility": {
         "public": string;
@@ -2325,6 +2326,7 @@ export interface Locale {
         "pollEnded": string;
         "newNote": string;
         "unreadAntennaNote": string;
+        "roleAssigned": string;
         "emptyPushNotificationMessage": string;
         "achievementEarned": string;
         "testNotification": string;
@@ -2346,6 +2348,7 @@ export interface Locale {
             "pollEnded": string;
             "receiveFollowRequest": string;
             "followRequestAccepted": string;
+            "roleAssigned": string;
             "achievementEarned": string;
             "app": string;
         };
