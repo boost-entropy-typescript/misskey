@@ -10,6 +10,7 @@
 - Fix: Play作成時に設定した公開範囲が機能していない問題を修正
 
 ### Client
+- Feat: アップロードするファイルの名前をランダム文字列にできるように
 - Enhance: 自分のノートの添付ファイルから直接ファイルの詳細ページに飛べるように
 - Enhance: 広告がMisskeyと同一ドメインの場合はRouterで遷移するように
 - Enhance: リアクション・いいねの総数を表示するように
@@ -47,6 +48,8 @@
 - Fix: エンドポイント`notes/translate`のエラーを改善
 - Fix: CleanRemoteFilesProcessorService report progress from 100% (#13632)
 - Fix: 一部の音声ファイルが映像ファイルとして扱われる問題を修正
+- Fix: 登録にメール認証が必須になっている場合、登録されているメールアドレスを削除できないように  
+  (Cherry-picked from https://github.com/MisskeyIO/misskey/pull/606)
 
 ## 2024.3.1
 
