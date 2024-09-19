@@ -2385,6 +2385,14 @@ export interface Locale extends ILocale {
      */
     "scratchpadDescription": string;
     /**
+     * UIインスペクター
+     */
+    "uiInspector": string;
+    /**
+     * メモリ上に存在しているUIコンポーネントのインスタンスの一覧を見ることができます。UIコンポーネントはUi:C:系関数により生成されます。
+     */
+    "uiInspectorDescription": string;
+    /**
      * 出力
      */
     "output": string;
@@ -9477,6 +9485,10 @@ export interface Locale extends ILocale {
          * Webhookを削除しますか？
          */
         "deleteConfirm": string;
+        /**
+         * スイッチの右にあるボタンをクリックするとダミーのデータを使用したテスト用Webhookを送信できます。
+         */
+        "testRemarks": string;
     };
     "_abuseReport": {
         "_notificationRecipient": {
