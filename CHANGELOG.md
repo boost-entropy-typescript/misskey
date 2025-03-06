@@ -1,7 +1,21 @@
+## Unreleased
+
+### General
+-
+
+### Client
+-
+
+### Server
+-
+
+
 ## 2025.3.0
 
 ### General
 - Enhance: プロキシアカウントをシステムアカウントとして作成するように
+- Enhance: OAuthで外部アプリからロゴが提供されている場合、それを表示できるように  
+  書式は https://indieauth.spec.indieweb.org/20220212/#example-2 に準じます。
 - Fix: システムアカウントが削除できる問題を修正
 
 ### Client
@@ -14,6 +28,8 @@
 
 ### Server
 - Fix: 特定のケースでActivityPubの処理がデッドロックになることがあるのを修正
+- Fix: S3互換オブジェクトストレージでファイルのアップロードに失敗することがある問題を修正  
+  (Cherry-picked from https://github.com/MisskeyIO/misskey/pull/895)
 
 
 ## 2025.2.1
