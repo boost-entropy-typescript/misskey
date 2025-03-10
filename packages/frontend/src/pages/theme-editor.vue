@@ -93,7 +93,7 @@ import { store } from '@/store.js';
 import { addTheme } from '@/theme-store.js';
 import { i18n } from '@/i18n.js';
 import { useLeaveGuard } from '@/utility/use-leave-guard.js';
-import { definePageMetadata } from '@/utility/page-metadata.js';
+import { definePage } from '@/page.js';
 import { prefer } from '@/preferences.js';
 
 const bgColors = [
@@ -201,9 +201,9 @@ async function saveAs() {
 	await addTheme(theme.value);
 	applyTheme(theme.value);
 	if (store.s.darkMode) {
-		prefer.set('darkTheme', theme.value);
+		prefer.commit('darkTheme', theme.value);
 	} else {
-		prefer.set('lightTheme', theme.value);
+		prefer.commit('lightTheme', theme.value);
 	}
 	changed.value = false;
 	os.alert({
@@ -228,7 +228,7 @@ const headerActions = computed(() => [{
 
 const headerTabs = computed(() => []);
 
-definePageMetadata(() => ({
+definePage(() => ({
 	title: i18n.ts.themeEditor,
 	icon: 'ti ti-palette',
 }));

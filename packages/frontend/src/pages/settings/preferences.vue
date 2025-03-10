@@ -377,7 +377,7 @@ import * as os from '@/os.js';
 import { misskeyApi } from '@/utility/misskey-api.js';
 import { reloadAsk } from '@/utility/reload-ask.js';
 import { i18n } from '@/i18n.js';
-import { definePageMetadata } from '@/utility/page-metadata.js';
+import { definePage } from '@/page.js';
 import { miLocalStorage } from '@/local-storage.js';
 import { prefer } from '@/preferences.js';
 import MkPreferenceContainer from '@/components/MkPreferenceContainer.vue';
@@ -488,11 +488,11 @@ async function setPinnedList() {
 	if (canceled) return;
 	if (list == null) return;
 
-	prefer.set('pinnedUserLists', [list]);
+	prefer.commit('pinnedUserLists', [list]);
 }
 
 function removePinnedList() {
-	prefer.set('pinnedUserLists', []);
+	prefer.commit('pinnedUserLists', []);
 }
 
 function enableAllDataSaver() {
@@ -512,7 +512,7 @@ function disableAllDataSaver() {
 }
 
 watch(dataSaver, (to) => {
-	prefer.set('dataSaver', to);
+	prefer.commit('dataSaver', to);
 }, {
 	deep: true,
 });
@@ -521,7 +521,7 @@ const headerActions = computed(() => []);
 
 const headerTabs = computed(() => []);
 
-definePageMetadata(() => ({
+definePage(() => ({
 	title: i18n.ts.general,
 	icon: 'ti ti-adjustments',
 }));

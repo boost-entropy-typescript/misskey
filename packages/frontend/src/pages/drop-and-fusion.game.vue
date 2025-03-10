@@ -198,7 +198,7 @@ import { DropAndFusionGame } from 'misskey-bubble-game';
 import { useInterval } from '@@/js/use-interval.js';
 import { apiUrl } from '@@/js/config.js';
 import type { Mono } from 'misskey-bubble-game';
-import { definePageMetadata } from '@/utility/page-metadata.js';
+import { definePage } from '@/page.js';
 import MkRippleEffect from '@/components/MkRippleEffect.vue';
 import * as os from '@/os.js';
 import MkNumber from '@/components/MkNumber.vue';
@@ -858,7 +858,7 @@ function updateSettings<
 >(key: K, value: V) {
 	const changes: { [P in K]?: V } = {};
 	changes[key] = value;
-	prefer.set('game.dropAndFusion', {
+	prefer.commit('game.dropAndFusion', {
 		...prefer.s['game.dropAndFusion'],
 		...changes,
 	});
@@ -1229,7 +1229,7 @@ onDeactivated(() => {
 	bgmNodes?.soundSource.stop();
 });
 
-definePageMetadata(() => ({
+definePage(() => ({
 	title: i18n.ts.bubbleGame,
 	icon: 'ti ti-apple',
 }));
