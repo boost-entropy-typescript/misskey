@@ -111,6 +111,7 @@ import type { MenuItem } from '@/types/menu.js';
 import type { PollEditorModelValue } from '@/components/MkPollEditor.vue';
 import MkNotePreview from '@/components/MkNotePreview.vue';
 import XPostFormAttaches from '@/components/MkPostFormAttaches.vue';
+import XTextCounter from '@/components/MkPostForm.TextCounter.vue';
 import MkPollEditor from '@/components/MkPollEditor.vue';
 import MkNoteSimple from '@/components/MkNoteSimple.vue';
 import { erase, unique } from '@/utility/array.js';
@@ -124,7 +125,7 @@ import { store } from '@/store.js';
 import MkInfo from '@/components/MkInfo.vue';
 import { i18n } from '@/i18n.js';
 import { instance } from '@/instance.js';
-import { signinRequired, notesCount, incNotesCount } from '@/i.js';
+import { ensureSignin, notesCount, incNotesCount } from '@/i.js';
 import { getAccounts, openAccountMenu as openAccountMenu_ } from '@/accounts.js';
 import { uploadFile } from '@/utility/upload.js';
 import { deepClone } from '@/utility/clone.js';
@@ -137,7 +138,7 @@ import { prefer } from '@/preferences.js';
 import { getPluginHandlers } from '@/plugin.js';
 import { DI } from '@/di.js';
 
-const $i = signinRequired();
+const $i = ensureSignin();
 
 const modal = inject('modal');
 
@@ -564,7 +565,13 @@ function showOtherSettings() {
 		reactionAcceptanceIcon = 'ti ti-heart-plus';
 	}
 
-	const menuDef = [{
+	const menuItems = [{
+		type: 'component',
+		component: XTextCounter,
+		props: {
+			textLength: textLength,
+		},
+	}, { type: 'divider' }, {
 		icon: reactionAcceptanceIcon,
 		text: i18n.ts.reactionAcceptance,
 		action: () => {
@@ -585,13 +592,7 @@ function showOtherSettings() {
 		},
 	}] satisfies MenuItem[];
 
-	const { dispose } = os.popup(defineAsyncComponent(() => import('@/components/MkPostFormOtherMenu.vue')), {
-		items: menuDef,
-		textLength: textLength.value,
-		src: otherSettingsButton.value,
-	}, {
-		closed: () => dispose(),
-	});
+	os.popupMenu(menuItems, otherSettingsButton.value);
 }
 //#endregion
 
