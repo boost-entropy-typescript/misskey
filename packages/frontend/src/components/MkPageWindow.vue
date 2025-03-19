@@ -41,8 +41,7 @@ import { i18n } from '@/i18n.js';
 import { provideMetadataReceiver, provideReactiveMetadata } from '@/page.js';
 import { openingWindowsCount } from '@/os.js';
 import { claimAchievement } from '@/utility/achievements.js';
-import { useRouterFactory } from '@/router/supplier.js';
-import { mainRouter } from '@/router/main.js';
+import { createRouter, mainRouter } from '@/router.js';
 import { analytics } from '@/analytics.js';
 import { DI } from '@/di.js';
 import { prefer } from '@/preferences.js';
@@ -55,14 +54,12 @@ const emit = defineEmits<{
 	(ev: 'closed'): void;
 }>();
 
-const routerFactory = useRouterFactory();
-const windowRouter = routerFactory(props.initialPath);
+const windowRouter = createRouter(props.initialPath);
 
 const pageMetadata = ref<null | PageMetadata>(null);
 const windowEl = shallowRef<InstanceType<typeof MkWindow>>();
-const history = ref<{ path: string; key: string; }[]>([{
+const history = ref<{ path: string; }[]>([{
 	path: windowRouter.getCurrentPath(),
-	key: windowRouter.getCurrentKey(),
 }]);
 const buttonsLeft = computed(() => {
 	const buttons: Record<string, unknown>[] = [];
@@ -100,12 +97,12 @@ function getSearchMarker(path: string) {
 const searchMarkerId = ref<string | null>(getSearchMarker(props.initialPath));
 
 windowRouter.addListener('push', ctx => {
-	history.value.push({ path: ctx.path, key: ctx.key });
+	history.value.push({ path: ctx.path });
 });
 
 windowRouter.addListener('replace', ctx => {
 	history.value.pop();
-	history.value.push({ path: ctx.path, key: ctx.key });
+	history.value.push({ path: ctx.path });
 });
 
 windowRouter.addListener('change', ctx => {
@@ -155,7 +152,7 @@ const contextmenu = computed(() => ([{
 
 function back() {
 	history.value.pop();
-	windowRouter.replace(history.value.at(-1)!.path, history.value.at(-1)!.key);
+	windowRouter.replace(history.value.at(-1)!.path);
 }
 
 function reload() {

@@ -22,14 +22,14 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 <script lang="ts" setup>
 import { inject, onBeforeUnmount, provide, ref, shallowRef, computed, nextTick } from 'vue';
-import type { IRouter, Resolved, RouteDef } from '@/nirax.js';
+import type { Router, Resolved, RouteDef } from '@/router.js';
 import { prefer } from '@/preferences.js';
 import { globalEvents } from '@/events.js';
 import MkLoadingPage from '@/pages/_loading_.vue';
 import { DI } from '@/di.js';
 
 const props = defineProps<{
-	router?: IRouter;
+	router?: Router;
 }>();
 
 const router = props.router ?? inject(DI.router);
@@ -44,13 +44,13 @@ provide(DI.routerCurrentDepth, currentDepth + 1);
 const current = router.current!;
 const currentPageComponent = shallowRef('component' in current.route ? current.route.component : MkLoadingPage);
 const currentPageProps = ref(current.props);
-const key = ref(router.getCurrentKey() + JSON.stringify(Object.fromEntries(current.props)));
+const key = ref(router.getCurrentPath());
 
-function onChange({ resolved, key: newKey }) {
+function onChange({ resolved }) {
 	if (resolved == null || 'redirect' in resolved.route) return;
 	currentPageComponent.value = resolved.route.component;
 	currentPageProps.value = resolved.props;
-	key.value = newKey + JSON.stringify(Object.fromEntries(resolved.props));
+	key.value = router.getCurrentPath();
 
 	nextTick(() => {
 		// ページ遷移完了後に再びキャッシュを有効化
