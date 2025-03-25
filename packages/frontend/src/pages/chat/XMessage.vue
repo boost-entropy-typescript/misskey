@@ -7,6 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <div :class="[$style.root, { [$style.isMe]: isMe }]">
 	<MkAvatar :class="$style.avatar" :user="message.fromUser" :link="!isMe" :preview="false"/>
 	<div :class="$style.body">
+		<div v-if="!isMe && prefer.s['chat.showSenderName']" :class="$style.header"><MkUserName :user="message.fromUser"/></div>
 		<MkFukidashi :class="$style.fukidashi" :tail="isMe ? 'right' : 'left'" :accented="isMe">
 			<div v-if="!message.isDeleted" :class="$style.content">
 				<Mfm v-if="message.text" ref="text" class="_selectable" :text="message.text" :i="$i"/>
@@ -31,7 +32,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			:moveClass="prefer.s.animation ? $style.transition_reaction_move : ''"
 			tag="div" :class="$style.reactions"
 		>
-			<div v-for="record in message.reactions" :key="record.reaction + record.user.id" :class="$style.reaction">
+			<div v-for="record in message.reactions" :key="record.reaction + record.user.id" :class="$style.reaction" @click="onReactionClick(record)">
 				<MkAvatar :user="record.user" :link="false" :class="$style.reactionAvatar"/>
 				<MkReactionIcon
 					:withTooltip="true"
@@ -84,6 +85,15 @@ function react(ev: MouseEvent) {
 			reaction: reaction,
 		});
 	});
+}
+
+function onReactionClick(record: Misskey.entities.ChatMessage['reactions'][0]) {
+	if (record.user.id === $i.id) {
+		misskeyApi('chat/messages/unreact', {
+			messageId: props.message.id,
+			reaction: record.reaction,
+		});
+	}
 }
 
 function showMenu(ev: MouseEvent) {
@@ -189,6 +199,10 @@ function showMenu(ev: MouseEvent) {
 
 .body {
 	margin: 0 12px;
+}
+
+.header {
+	font-size: 80%;
 }
 
 .content {
