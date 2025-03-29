@@ -4,17 +4,19 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<PageWithHeader ref="rootEl" v-model:tab="src" :actions="headerActions" :tabs="$i ? headerTabs : headerTabsWhenNotLogin" :displayMyAvatar="true">
-	<MkSpacer :contentMax="800">
-		<MkInfo v-if="isBasicTimeline(src) && !store.r.timelineTutorials.value[src]" style="margin-bottom: var(--MI-margin);" closable @close="closeTutorial()">
-			{{ i18n.ts._timelineDescription[src] }}
-		</MkInfo>
-		<MkPostForm v-if="prefer.r.showFixedPostForm.value" :class="$style.postForm" class="post-form _panel" fixed style="margin-bottom: var(--MI-margin);"/>
-		<div v-if="queue > 0" :class="$style.new"><button class="_buttonPrimary" :class="$style.newButton" @click="top()">{{ i18n.ts.newNoteRecived }}</button></div>
-		<div :class="$style.tl">
+<div ref="rootEl" class="_pageScrollable">
+	<MkStickyContainer>
+		<template #header><MkPageHeader v-model:tab="src" :actions="headerActions" :tabs="$i ? headerTabs : headerTabsWhenNotLogin"/></template>
+		<MkSpacer :contentMax="800">
+			<MkInfo v-if="isBasicTimeline(src) && !store.r.timelineTutorials.value[src]" style="margin-bottom: var(--MI-margin);" closable @close="closeTutorial()">
+				{{ i18n.ts._timelineDescription[src] }}
+			</MkInfo>
+			<MkPostForm v-if="prefer.r.showFixedPostForm.value" :class="$style.postForm" class="_panel" fixed style="margin-bottom: var(--MI-margin);"/>
+			<div v-if="queue > 0" :class="$style.new"><button class="_buttonPrimary" :class="$style.newButton" @click="top()">{{ i18n.ts.newNoteRecived }}</button></div>
 			<MkTimeline
 				ref="tlComponent"
 				:key="src + withRenotes + withReplies + onlyFiles + withSensitive"
+				:class="$style.tl"
 				:src="src.split(':')[0]"
 				:list="src.split(':')[1]"
 				:withRenotes="withRenotes"
@@ -24,22 +26,21 @@ SPDX-License-Identifier: AGPL-3.0-only
 				:sound="true"
 				@queue="queueUpdated"
 			/>
-		</div>
-	</MkSpacer>
-</PageWithHeader>
+		</MkSpacer>
+	</MkStickyContainer>
+</div>
 </template>
 
 <script lang="ts" setup>
 import { computed, watch, provide, useTemplateRef, ref, onMounted, onActivated } from 'vue';
+import { scrollInContainer } from '@@/js/scroll.js';
 import type { Tab } from '@/components/global/MkPageHeader.tabs.vue';
 import type { MenuItem } from '@/types/menu.js';
 import type { BasicTimelineType } from '@/timelines.js';
 import MkTimeline from '@/components/MkTimeline.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import MkPostForm from '@/components/MkPostForm.vue';
-import MkHorizontalSwipe from '@/components/MkHorizontalSwipe.vue';
 import * as os from '@/os.js';
-import { misskeyApi } from '@/utility/misskey-api.js';
 import { store } from '@/store.js';
 import { i18n } from '@/i18n.js';
 import { $i } from '@/i.js';
@@ -128,7 +129,7 @@ function queueUpdated(q: number): void {
 }
 
 function top(): void {
-	if (rootEl.value) rootEl.value.scrollToTop();
+	if (rootEl.value) scrollInContainer(rootEl.value, { top: 0, behavior: 'instant' });
 }
 
 async function chooseList(ev: MouseEvent): Promise<void> {
