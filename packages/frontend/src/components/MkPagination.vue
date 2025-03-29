@@ -46,7 +46,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 import { computed, isRef, nextTick, onActivated, onBeforeMount, onBeforeUnmount, onDeactivated, ref, useTemplateRef, watch } from 'vue';
 import * as Misskey from 'misskey-js';
 import { useDocumentVisibility } from '@@/js/use-document-visibility.js';
-import { onScrollTop, isHeadVisible, getBodyScrollHeight, getScrollContainer, onScrollBottom, scrollToBottom, scroll, isTailVisible } from '@@/js/scroll.js';
+import { onScrollTop, isHeadVisible, getBodyScrollHeight, getScrollContainer, onScrollBottom, scrollToBottom, scrollInContainer, isTailVisible } from '@@/js/scroll.js';
 import type { ComputedRef } from 'vue';
 import type { MisskeyEntity } from '@/types/date-separated-list.js';
 import { misskeyApi } from '@/utility/misskey-api.js';
@@ -258,7 +258,7 @@ const fetchMore = async (): Promise<void> => {
 
 			return nextTick(() => {
 				if (scrollableElement.value) {
-					scroll(scrollableElement.value, { top: oldScroll + (scrollableElement.value.scrollHeight - oldHeight), behavior: 'instant' });
+					scrollInContainer(scrollableElement.value, { top: oldScroll + (scrollableElement.value.scrollHeight - oldHeight), behavior: 'instant' });
 				} else {
 					window.scroll({ top: oldScroll + (getBodyScrollHeight() - oldHeight), behavior: 'instant' });
 				}
@@ -357,7 +357,7 @@ watch(visibility, () => {
 		BACKGROUND_PAUSE_WAIT_SEC * 1000);
 	} else { // 'visible'
 		if (timerForSetPause) {
-			clearTimeout(timerForSetPause);
+			window.clearTimeout(timerForSetPause);
 			timerForSetPause = null;
 		} else {
 			isPausingUpdate = false;
@@ -453,11 +453,11 @@ onBeforeMount(() => {
 	init().then(() => {
 		if (props.pagination.reversed) {
 			nextTick(() => {
-				setTimeout(toBottom, 800);
+				window.setTimeout(toBottom, 800);
 
 				// scrollToBottomでmoreFetchingボタンが画面外まで出るまで
 				// more = trueを遅らせる
-				setTimeout(() => {
+				window.setTimeout(() => {
 					moreFetching.value = false;
 				}, 2000);
 			});
@@ -467,11 +467,11 @@ onBeforeMount(() => {
 
 onBeforeUnmount(() => {
 	if (timerForSetPause) {
-		clearTimeout(timerForSetPause);
+		window.clearTimeout(timerForSetPause);
 		timerForSetPause = null;
 	}
 	if (preventAppearFetchMoreTimer.value) {
-		clearTimeout(preventAppearFetchMoreTimer.value);
+		window.clearTimeout(preventAppearFetchMoreTimer.value);
 		preventAppearFetchMoreTimer.value = null;
 	}
 	scrollObserver.value?.disconnect();
