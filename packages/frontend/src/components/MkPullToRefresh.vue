@@ -4,8 +4,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<div ref="rootEl">
-	<div v-if="isPulling" :class="$style.frame" :style="`--frame-min-height: ${pullDistance / (PULL_BRAKE_BASE + (pullDistance / PULL_BRAKE_FACTOR))}px;`">
+<div ref="rootEl" :class="isPulling ? $style.isPulling : null">
+	<!-- 小数が含まれるとレンダリングが高頻度になりすぎパフォーマンスが悪化するためround -->
+	<div v-if="isPulling" :class="$style.frame" :style="`--frame-min-height: ${Math.round(pullDistance / (PULL_BRAKE_BASE + (pullDistance / PULL_BRAKE_FACTOR)))}px;`">
 		<div :class="$style.frameContent">
 			<MkLoading v-if="isRefreshing" :class="$style.loader" :em="true"/>
 			<i v-else class="ti ti-arrow-bar-to-down" :class="[$style.icon, { [$style.refresh]: isPulledEnough }]"></i>
@@ -64,13 +65,15 @@ function getScreenY(event: TouchEvent | MouseEvent | PointerEvent): number {
 
 // When at the top of the page, disable vertical overscroll so passive touch listeners can take over.
 function lockDownScroll() {
-	scrollEl!.style.touchAction = 'pan-x pan-down pinch-zoom';
-	scrollEl!.style.overscrollBehavior = 'none';
+	if (scrollEl == null) return;
+	scrollEl.style.touchAction = 'pan-x pan-down pinch-zoom';
+	scrollEl.style.overscrollBehavior = 'none';
 }
 
 function unlockDownScroll() {
-	scrollEl!.style.touchAction = 'auto';
-	scrollEl!.style.overscrollBehavior = 'contain';
+	if (scrollEl == null) return;
+	scrollEl.style.touchAction = 'auto';
+	scrollEl.style.overscrollBehavior = 'contain';
 }
 
 function moveStart(event: PointerEvent) {
@@ -204,20 +207,24 @@ function refreshFinished() {
 
 onMounted(() => {
 	if (rootEl.value == null) return;
-
 	scrollEl = getScrollContainer(rootEl.value);
-
+	lockDownScroll();
 	rootEl.value.addEventListener('pointerdown', moveStart, { passive: true });
 	rootEl.value.addEventListener('touchend', toggleScrollLockOnTouchEnd, { passive: true });
 });
 
 onUnmounted(() => {
-	rootEl.value.removeEventListener('pointerdown', moveStart);
-	rootEl.value.removeEventListener('touchend', toggleScrollLockOnTouchEnd);
+	unlockDownScroll();
+	if (rootEl.value) rootEl.value.removeEventListener('pointerdown', moveStart);
+	if (rootEl.value) rootEl.value.removeEventListener('touchend', toggleScrollLockOnTouchEnd);
 });
 </script>
 
 <style lang="scss" module>
+.isPulling {
+	will-change: contents;
+}
+
 .frame {
 	position: relative;
 	overflow: clip;
