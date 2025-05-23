@@ -43,6 +43,8 @@
 - Enhance: ノートのサーバー情報のデザインを改善・パフォーマンス向上  
   (Based on https://github.com/taiyme/misskey/pull/198, https://github.com/taiyme/misskey/pull/211, https://github.com/taiyme/misskey/pull/283)
 - Enhance: ユーザー設定でURLプレビューを無効化できるように
+- Enhance: ヒントとコツを追加
+- Enhance: ヒントとコツを再表示できるように
 - Enhance: AiScriptからtoastを表示する関数 `Mk:toast` を追加
 - Enhance: シンタックスハイライトのエンジンをJavaScriptベースのものに変更
   - フロントエンドの読み込みサイズを軽量化しました
@@ -58,6 +60,7 @@
 - Fix: ユーザ除外アンテナをインポートできない問題を修正
 - Fix: アンテナのセンシティブなチャンネルのノートを含むかどうかの情報がエクスポートされない問題を修正
 - Fix: 連合モードが「なし」の場合に、生成されるHTML内のactivity jsonへのリンクタグを省略するように
+- Fix: コントロールパネルから招待コードを作成すると作成者の情報が記録されない問題を修正
 
 
 ## 2025.5.0
