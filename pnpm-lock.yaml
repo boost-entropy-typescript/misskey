@@ -26,8 +26,8 @@ importers:
         specifier: 3.3.3
         version: 3.3.3
       glob:
-        specifier: 11.1.0
-        version: 11.1.0
+        specifier: 13.0.0
+        version: 13.0.0
       ignore-walk:
         specifier: 8.0.0
         version: 8.0.0
@@ -729,8 +729,8 @@ importers:
         specifier: 10.26.0
         version: 10.26.0(vue@3.5.24(typescript@5.9.3))
       '@syuilo/aiscript':
-        specifier: 1.1.2
-        version: 1.1.2
+        specifier: 1.2.0
+        version: 1.2.0
       '@syuilo/aiscript-0-19-0':
         specifier: npm:@syuilo/aiscript@^0.19.0
         version: '@syuilo/aiscript@0.19.0'
@@ -4459,8 +4459,8 @@ packages:
   '@syuilo/aiscript@0.19.0':
     resolution: {integrity: sha512-ZWG4s1m6RrFjE7NeIMaxFz769YO1jW5ReTrOROrEO4IHheOrjxxJ/Ffe2TUNqX9/XxDloMwfWplKhfSzx8LGMA==}
 
-  '@syuilo/aiscript@1.1.2':
-    resolution: {integrity: sha512-cijsHTiMjeECocElyjRIcWMPGDhZIX3YfCOyzI6AZM8ajxRQ2hSqJwEh9pDr4mVTml9kLMHWDHmgfHkTHRJ1sg==}
+  '@syuilo/aiscript@1.2.0':
+    resolution: {integrity: sha512-3MkKfqDftqHyouINgHEIHnoTVWEeL0L1o7Y7Y9d8qb5h5vZKphzH/KVG3R2iI6CHtmO1mWHHJx5A499f80H9FA==}
 
   '@szmarczak/http-timer@5.0.1':
     resolution: {integrity: sha512-+PmQX0PiAYPMeVYe237LJAYvOMYW1j2rH5YROyS3b4CTVJum34HfRvKvAzozHAQG0TnHNdUfY9nCeUyRAs//cw==}
@@ -7128,6 +7128,10 @@ packages:
     resolution: {integrity: sha512-5Qcll1z7IKgHr5g485ePDdHcNQY0k2dtv/bjYy0iuyGxQw2qSOiiXUXJ+AYQpg3HNoUMHqAruX478Jeev7UULw==}
     engines: {node: 20 || >=22}
     hasBin: true
+
+  glob@13.0.0:
+    resolution: {integrity: sha512-tvZgpqk6fz4BaNZ66ZsRaZnbHvP/jG3uKJvAZOwEVUL4RTA5nJeeLYfyN9/VA8NX/V3IBG+hkeuGpKjvELkVhA==}
+    engines: {node: 20 || >=22}
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
@@ -14858,7 +14862,7 @@ snapshots:
       stringz: 2.1.0
       uuid: 9.0.1
 
-  '@syuilo/aiscript@1.1.2':
+  '@syuilo/aiscript@1.2.0':
     dependencies:
       seedrandom: 3.0.5
       stringz: 2.1.0
@@ -18255,6 +18259,12 @@ snapshots:
       minimatch: 10.1.1
       minipass: 7.1.2
       package-json-from-dist: 1.0.1
+      path-scurry: 2.0.1
+
+  glob@13.0.0:
+    dependencies:
+      minimatch: 10.1.1
+      minipass: 7.1.2
       path-scurry: 2.0.1
 
   glob@7.2.3:
