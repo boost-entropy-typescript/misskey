@@ -14,16 +14,45 @@ import { fork } from 'node:child_process';
 import { setTimeout } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import * as fs from 'node:fs/promises';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const SAMPLE_COUNT = 3; // Number of samples to measure
 const STARTUP_TIMEOUT = 120000; // 120 seconds timeout for server startup
 const MEMORY_SETTLE_TIME = 10000; // Wait 10 seconds after startup for memory to settle
 
-async function measureMemory() {
-	const startTime = Date.now();
+const keys = {
+	VmPeak: 0,
+	VmSize: 0,
+	VmHWM: 0,
+	VmRSS: 0,
+	VmData: 0,
+	VmStk: 0,
+	VmExe: 0,
+	VmLib: 0,
+	VmPTE: 0,
+	VmSwap: 0,
+};
 
+async function getMemoryUsage(pid) {
+	const status = await fs.readFile(`/proc/${pid}/status`, 'utf-8');
+
+	const result = {};
+	for (const key of Object.keys(keys)) {
+		const match = status.match(new RegExp(`${key}:\\s+(\\d+)\\s+kB`));
+		if (match) {
+			result[key] = parseInt(match[1], 10);
+		} else {
+			throw new Error(`Failed to parse ${key} from /proc/${pid}/status`);
+		}
+	}
+
+	return result;
+}
+
+async function measureMemory() {
 	// Start the Misskey backend server using fork to enable IPC
 	const serverProcess = fork(join(__dirname, '../built/boot/entry.js'), ['expose-gc'], {
 		cwd: join(__dirname, '..'),
@@ -31,9 +60,9 @@ async function measureMemory() {
 			...process.env,
 			NODE_ENV: 'production',
 			MK_DISABLE_CLUSTERING: '1',
-			MK_FORCE_GC: '1',
 		},
 		stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
+		execArgv: [...process.execArgv, '--expose-gc'],
 	});
 
 	let serverReady = false;
@@ -75,46 +104,21 @@ async function measureMemory() {
 	// Wait for memory to settle
 	await setTimeout(MEMORY_SETTLE_TIME);
 
-	// Get memory usage from the server process via /proc
 	const pid = serverProcess.pid;
-	let memoryInfo;
 
-	try {
-		const fs = await import('node:fs/promises');
+	const beforeGc = await getMemoryUsage(pid);
 
-		// Read /proc/[pid]/status for detailed memory info
-		const status = await fs.readFile(`/proc/${pid}/status`, 'utf-8');
-		const vmRssMatch = status.match(/VmRSS:\s+(\d+)\s+kB/);
-		const vmDataMatch = status.match(/VmData:\s+(\d+)\s+kB/);
-		const vmSizeMatch = status.match(/VmSize:\s+(\d+)\s+kB/);
+	serverProcess.send('gc');
 
-		memoryInfo = {
-			rss: vmRssMatch ? parseInt(vmRssMatch[1], 10) * 1024 : null,
-			heapUsed: vmDataMatch ? parseInt(vmDataMatch[1], 10) * 1024 : null,
-			vmSize: vmSizeMatch ? parseInt(vmSizeMatch[1], 10) * 1024 : null,
-		};
-	} catch (err) {
-		// Fallback: use ps command
-		process.stderr.write(`Warning: Could not read /proc/${pid}/status: ${err}\n`);
+	await new Promise((resolve) => {
+		serverProcess.once('message', (message) => {
+			if (message === 'gc ok') resolve();
+		});
+	});
 
-		const { execSync } = await import('node:child_process');
-		try {
-			const ps = execSync(`ps -o rss= -p ${pid}`, { encoding: 'utf-8' });
-			const rssKb = parseInt(ps.trim(), 10);
-			memoryInfo = {
-				rss: rssKb * 1024,
-				heapUsed: null,
-				vmSize: null,
-			};
-		} catch {
-			memoryInfo = {
-				rss: null,
-				heapUsed: null,
-				vmSize: null,
-				error: 'Could not measure memory',
-			};
-		}
-	}
+	await setTimeout(1000);
+
+	const afterGc = await getMemoryUsage(pid);
 
 	// Stop the server
 	serverProcess.kill('SIGTERM');
@@ -137,15 +141,46 @@ async function measureMemory() {
 
 	const result = {
 		timestamp: new Date().toISOString(),
-		startupTimeMs: startupTime,
-		memory: memoryInfo,
+		beforeGc,
+		afterGc,
+	};
+
+	return result;
+}
+
+async function main() {
+	// 直列の方が時間的に分散されて正確そうだから直列でやる
+	const results = [];
+	for (let i = 0; i < SAMPLE_COUNT; i++) {
+		const res = await measureMemory();
+		results.push(res);
+	}
+
+	// Calculate averages
+	const beforeGc = structuredClone(keys);
+	const afterGc = structuredClone(keys);
+	for (const res of results) {
+		for (const key of Object.keys(keys)) {
+			beforeGc[key] += res.beforeGc[key];
+			afterGc[key] += res.afterGc[key];
+		}
+	}
+	for (const key of Object.keys(keys)) {
+		beforeGc[key] = Math.round(beforeGc[key] / SAMPLE_COUNT);
+		afterGc[key] = Math.round(afterGc[key] / SAMPLE_COUNT);
+	}
+
+	const result = {
+		timestamp: new Date().toISOString(),
+		beforeGc,
+		afterGc,
 	};
 
 	// Output as JSON to stdout
 	console.log(JSON.stringify(result, null, 2));
 }
 
-measureMemory().catch((err) => {
+main().catch((err) => {
 	console.error(JSON.stringify({
 		error: err.message,
 		timestamp: new Date().toISOString(),
