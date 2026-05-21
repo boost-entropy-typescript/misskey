@@ -1,3 +1,15 @@
+## Unreleased
+
+### General
+-
+
+### Client
+-
+
+### Server
+-
+
+
 ## 2026.5.4
 
 ### General
@@ -5,9 +17,6 @@
 
 ### Client
 - Fix: ビルドに失敗することがある問題を修正
-
-### Server
--
 
 
 ## 2026.5.3
