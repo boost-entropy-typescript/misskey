@@ -106,10 +106,6 @@ function getSamplesByRound(report: MemoryReport) {
 	return samplesByRound;
 }
 
-function formatDeltaMemory(diffKiB: number) {
-	return util.formatColoredDelta(formatMemoryMb(Math.abs(diffKiB)), diffKiB);
-}
-
 function pairedDeltaSummary(base: MemoryReport, head: MemoryReport, phase: typeof memoryReportPhases[number]['key'], metric: typeof metrics[number]) {
 	const baseSamplesByRound = getSamplesByRound(base);
 	const headSamplesByRound = getSamplesByRound(head);
@@ -141,6 +137,10 @@ function renderMainTableForPhase(base: MemoryReport, head: MemoryReport, phase: 
 		'| --- | ---: | ---: | ---: | ---: | ---: | ---: |',
 	];
 
+	function formatDeltaMemory(diffKiB: number) {
+		return util.formatColoredDelta(formatMemoryMb(Math.abs(diffKiB)), diffKiB);
+	}
+
 	for (const metric of metrics) {
 		const baseValue = getMemoryValue(base, phase, metric);
 		const headValue = getMemoryValue(head, phase, metric);
@@ -149,20 +149,12 @@ function renderMainTableForPhase(base: MemoryReport, head: MemoryReport, phase: 
 		const headSpread = getSampleSpread(head, phase, metric);
 		const summary = pairedDeltaSummary(base, head, phase, metric);
 		const percent = summary.median * 100 / baseValue;
-		const deltaMedian = summary == null ? '-' : `${formatDeltaMemory(summary.median)}<br>${util.formatDeltaPercent(percent)}`;
+		const deltaMedian = summary == null ? '-' : `${formatDeltaMemory(summary.median)}<br>${util.formatDeltaPercent(percent).replaceAll('\\%', '\\\\%')}`;
 
 		lines.push(`| **${metric}** | ${formatMemoryMb(baseValue)} <br> ± ${formatMemoryMb(baseSpread)} | ${formatMemoryMb(headValue)} <br> ± ${formatMemoryMb(headSpread)} | ${deltaMedian} | ${summary?.mad == null ? '-' : formatMemoryMb(summary.mad)} | ${summary == null ? '-' : formatDeltaMemory(summary.min)} | ${summary == null ? '-' : formatDeltaMemory(summary.max)} |`);
 	}
 
 	return lines.join('\n');
-}
-
-function getDiffPercent(base: MemoryReport, head: MemoryReport, phase: typeof memoryReportPhases[number]['key'], metric: typeof metrics[number]) {
-	const baseValue = getMemoryValue(base, phase, metric);
-	const headValue = getMemoryValue(head, phase, metric);
-	if (baseValue == null || headValue == null || baseValue <= 0) return null;
-
-	return ((headValue - baseValue) * 100) / baseValue;
 }
 
 /*
@@ -182,14 +174,6 @@ function measurementSummary(base, head) {
 }
 */
 
-function formatPlainDelta(baseValue: number, headValue: number, formatter = util.formatNumber) {
-	const delta = headValue - baseValue;
-	if (delta === 0) return formatter(0);
-
-	const sign = delta > 0 ? '+' : '-';
-	return `${sign}${formatter(Math.abs(delta))}`;
-}
-
 function getHeapSnapshotCategoryValue(report: MemoryReport, phase: typeof memoryReportPhases[number]['key'], category: typeof util.heapSnapshotCategories[number]) {
 	const value = report.summary[phase]?.heapSnapshot?.categories?.[category];
 	return Number.isFinite(value) ? value : null;
@@ -207,17 +191,6 @@ function escapeCsvValue(value: string) {
 	return `"${String(value).replaceAll('"', '""')}"`;
 }
 
-function formatSankeyPercentValue(value: number) {
-	const rounded = Math.round(value * 100) / 100;
-	if (rounded === 0 && value > 0) return '0.01';
-	if (Number.isInteger(rounded)) return String(rounded);
-	return rounded.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
-}
-
-function formatHeapSnapshotSankeyChildLabel(label: string) {
-	return String(label).replace(/^[^:]+:\s*/, '');
-}
-
 function renderHeapSnapshotSankey(report: MemoryReport, phase: typeof memoryReportPhases[number]['key'], title: string) {
 	const total = getHeapSnapshotCategoryValue(report, phase, 'Total');
 	if (total == null || total <= 0) return null;
@@ -229,6 +202,17 @@ function renderHeapSnapshotSankey(report: MemoryReport, phase: typeof memoryRepo
 		return Object.entries(breakdown)
 			.filter(([, value]) => Number.isFinite(value) && value > 0)
 			.toSorted((a, b) => b[1] - a[1]);
+	}
+
+	function formatHeapSnapshotSankeyChildLabel(label: string) {
+		return String(label).replace(/^[^:]+:\s*/, '');
+	}
+
+	function formatSankeyPercentValue(value: number) {
+		const rounded = Math.round(value * 100) / 100;
+		if (rounded === 0 && value > 0) return '0.01';
+		if (Number.isInteger(rounded)) return String(rounded);
+		return rounded.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
 	}
 
 	const categories = util.heapSnapshotCategories
@@ -375,7 +359,7 @@ function renderHeapSnapshotTable(base: MemoryReport, head: MemoryReport, phase: 
 		const headSpread = getHeapSnapshotSampleSpread(head, phase, category);
 		const summary = pairedHeapSnapshotDeltaSummary(base, head, phase, category);
 		const percent = summary.median * 100 / baseValue;
-		const deltaMedian = summary == null ? '-' : `${util.formatDeltaBytes(summary.median)}<br>${util.formatDeltaPercent(percent)}`;
+		const deltaMedian = summary == null ? '-' : `${util.formatDeltaBytes(summary.median)}<br>${util.formatDeltaPercent(percent).replaceAll('\\%', '\\\\%')}`;
 		const categoryLabel = formatHeapSnapshotCategoryLabel(category, baseValue, headValue, baseTotal, headTotal);
 
 		lines.push(`| $\\color{${heapSnapshotCategoriesColors[category]}}{\\rule{8pt}{8pt}}$ ${categoryLabel} | ${util.formatBytes(baseValue)} <br> ± ${baseSpread == null ? '-' : util.formatBytes(baseSpread)} | ${util.formatBytes(headValue)} <br> ± ${headSpread == null ? '-' : util.formatBytes(headSpread)} | ${deltaMedian} | ${summary?.mad == null ? '-' : util.formatBytes(summary.mad)} | ${summary == null ? '-' : util.formatDeltaBytes(summary.min)} | ${summary == null ? '-' : util.formatDeltaBytes(summary.max)} |`);
@@ -439,7 +423,7 @@ function renderJsFootprintMetricTable(base: RuntimeLoadedJsFootprintReport, head
 		const headValue = getJsFootprintValue(head, 'afterRequest', key);
 		if (baseValue == null || headValue == null) continue;
 
-		lines.push(`| **${title}** | ${formatter(baseValue)} | ${formatter(headValue)} | ${formatPlainDelta(baseValue, headValue, formatter)} | ${util.calcAndFormatDeltaPercent(baseValue, headValue)} |`);
+		lines.push(`| **${title}** | ${formatter(baseValue)} | ${formatter(headValue)} | ${util.formatColoredDelta(formatter(headValue - baseValue), headValue - baseValue)} | ${util.calcAndFormatDeltaPercent(baseValue, headValue).replaceAll('\\%', '\\\\%')} |`);
 	}
 
 	return lines.join('\n');
@@ -534,7 +518,7 @@ function renderLargestPackageIncreases(base: RuntimeLoadedJsFootprintReport, hea
 	];
 
 	for (const packageSummary of increases) {
-		lines.push(`| ${packageDisplayName(packageSummary)} | ${util.formatBytes(packageSummary.baseSourceBytes)} | ${util.formatBytes(packageSummary.sourceBytes)} | ${formatPlainDelta(packageSummary.baseSourceBytes, packageSummary.sourceBytes, util.formatBytes)} | ${formatPlainDelta(packageSummary.baseModules, packageSummary.modules)} |`);
+		lines.push(`| ${packageDisplayName(packageSummary)} | ${util.formatBytes(packageSummary.baseSourceBytes)} | ${util.formatBytes(packageSummary.sourceBytes)} | ${util.formatColoredDelta(util.formatBytes(packageSummary.sourceBytes - packageSummary.baseSourceBytes), packageSummary.sourceBytes - packageSummary.baseSourceBytes)} | ${util.formatColoredDelta(util.formatNumber(packageSummary.modules - packageSummary.baseModules), packageSummary.modules - packageSummary.baseModules)} |`);
 	}
 
 	return lines.join('\n');
@@ -643,6 +627,14 @@ function getWarningMetric(base: MemoryReport, head: MemoryReport) {
 		}
 	}
 	return null;
+}
+
+function getDiffPercent(base: MemoryReport, head: MemoryReport, phase: typeof memoryReportPhases[number]['key'], metric: typeof metrics[number]) {
+	const baseValue = getMemoryValue(base, phase, metric);
+	const headValue = getMemoryValue(head, phase, metric);
+	if (baseValue == null || headValue == null || baseValue <= 0) return null;
+
+	return ((headValue - baseValue) * 100) / baseValue;
 }
 
 function isBeyondSampleNoise(base: MemoryReport, head: MemoryReport, phase: typeof memoryReportPhases[number]['key'], metric: typeof metrics[number]) {
