@@ -3,20 +3,11 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
+// NOTE: このファイルはworkflow上でバックエンドからも参照されるため、side effectがあってはならない
+
 import { spawn } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-
-export const heapSnapshotCategories = [
-	'Total',
-	'Code',
-	'Strings',
-	'JS arrays',
-	'Typed arrays',
-	'System objects',
-	'Other JS objects',
-	'Other non-JS objects',
-] as const;
 
 export function median(values: number[]) {
 	const sorted = values.toSorted((a, b) => a - b);
@@ -26,10 +17,44 @@ export function median(values: number[]) {
 }
 
 export function mad(values: number[]) {
-	if (values.length < 2) return null;
+	if (values.length < 2) throw new Error('Not enough samples to calculate MAD');
 
 	const center = median(values);
 	return median(values.map(value => Math.abs(value - center)));
+}
+
+function getSamplesByRound<T extends { round: number; }[]>(samples: T) {
+	const samplesByRound = new Map<number, T[number]>();
+	for (const sample of samples) {
+		if (sample.round <= 0) continue;
+		samplesByRound.set(sample.round, sample);
+	}
+	return samplesByRound;
+}
+
+export function pairedDeltaSummary<T extends { round: number; }[]>(baseSamples: T, headSamples: T, getValue: (sample: T[number]) => number | null) {
+	const baseSamplesByRound = getSamplesByRound(baseSamples);
+	const headSamplesByRound = getSamplesByRound(headSamples);
+	const values = [];
+
+	for (const [round, baseSample] of baseSamplesByRound) {
+		const headSample = headSamplesByRound.get(round);
+		if (headSample == null) continue;
+
+		const baseValue = getValue(baseSample);
+		const headValue = getValue(headSample);
+		if (baseValue == null || headValue == null) continue;
+
+		values.push(headValue - baseValue);
+	}
+
+	return {
+		median: median(values),
+		mad: mad(values),
+		min: Math.min(...values),
+		max: Math.max(...values),
+		samples: values.length,
+	};
 }
 
 export function normalizePath(filePath: string) {
@@ -86,7 +111,7 @@ export function formatNumber(value: number) {
 
 export function formatBytes(value: number) {
 	if (value === 0) return '0 B';
-	const units = ['B', 'KiB', 'MiB', 'GiB'];
+	const units = ['B', 'KB', 'MB', 'GB'];
 	let unitIndex = 0;
 	let size = value;
 	while (size >= 1024 && unitIndex < units.length - 1) {

@@ -10,6 +10,7 @@ import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 //import * as http from 'node:http';
 import * as fs from 'node:fs/promises';
+import { heapSnapshotCategory, type HeapSnapshotData } from '../../../.github/scripts/heap-snapshot-util.mts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -43,17 +44,6 @@ const HEAP_SNAPSHOT_BREAKDOWN_TOP_N = readIntegerEnv('MK_MEMORY_HEAP_SNAPSHOT_BR
 
 const procStatusKeys = ['VmPeak', 'VmSize', 'VmHWM', 'VmRSS', 'VmData', 'VmStk', 'VmExe', 'VmLib', 'VmPTE', 'VmSwap'] as const;
 const smapsRollupKeys = ['Pss', 'Shared_Clean', 'Shared_Dirty', 'Private_Clean', 'Private_Dirty', 'Swap', 'SwapPss'] as const;
-
-const heapSnapshotCategories = [
-	'Code',
-	'Strings',
-	'JS arrays',
-	'Typed arrays',
-	'System objects',
-	'Other JS objects',
-	'Other non-JS objects',
-	'Total',
-];
 
 const typedArrayNames = new Set([
 	'ArrayBuffer',
@@ -101,10 +91,6 @@ function bytesToKiB(value: number) {
 	return Math.round(value / 1024);
 }
 
-function createEmptyHeapSnapshotCategoryMap() {
-	return Object.fromEntries(heapSnapshotCategories.map(category => [category, 0]));
-}
-
 function isTypedArrayNode(type, name) {
 	return typedArrayNames.has(name) ||
 		(type === 'native' && (name.includes('ArrayBuffer') || name.includes('TypedArray')));
@@ -118,14 +104,14 @@ function isSystemNode(type, name) {
 		name.startsWith('(system ');
 }
 
-function classifyHeapSnapshotNode(type, name) {
-	if (type === 'code') return 'Code';
-	if (type === 'string' || type === 'concatenated string' || type === 'sliced string') return 'Strings';
-	if (isTypedArrayNode(type, name)) return 'Typed arrays';
-	if (type === 'array' || (type === 'object' && name === 'Array')) return 'JS arrays';
-	if (isSystemNode(type, name)) return 'System objects';
-	if (otherJsNodeTypes.has(type)) return 'Other JS objects';
-	return 'Other non-JS objects';
+function classifyHeapSnapshotNode(type, name): keyof typeof heapSnapshotCategory {
+	if (type === 'code') return 'code';
+	if (type === 'string' || type === 'concatenated string' || type === 'sliced string') return 'strings';
+	if (isTypedArrayNode(type, name)) return 'typedArrays';
+	if (type === 'array' || (type === 'object' && name === 'Array')) return 'jsArrays';
+	if (isSystemNode(type, name)) return 'systemObjects';
+	if (otherJsNodeTypes.has(type)) return 'otherJsObjects';
+	return 'otherNonJsObjects';
 }
 
 function sanitizeHeapSnapshotBreakdownLabel(value, fallback = 'unknown') {
@@ -135,16 +121,16 @@ function sanitizeHeapSnapshotBreakdownLabel(value, fallback = 'unknown') {
 	return `${label.slice(0, 77)}...`;
 }
 
-function classifyHeapSnapshotBreakdown(category, type, name) {
-	if (category === 'Strings') return type;
+function classifyHeapSnapshotBreakdown(category: keyof typeof heapSnapshotCategory, type, name) {
+	if (category === 'strings') return type;
 
-	if (category === 'JS arrays') {
+	if (category === 'jsArrays') {
 		if (type === 'array') return 'array nodes';
 		if (type === 'object' && name === 'Array') return 'Array objects';
 		return sanitizeHeapSnapshotBreakdownLabel(`${type}: ${name}`);
 	}
 
-	if (category === 'Typed arrays') {
+	if (category === 'typedArrays') {
 		if (name === 'system / JSArrayBufferData') return 'ArrayBuffer data';
 		if (name === 'Uint8Array') return 'Uint8Array / Buffer';
 		if (typedArrayNames.has(name)) return name;
@@ -153,23 +139,23 @@ function classifyHeapSnapshotBreakdown(category, type, name) {
 		return sanitizeHeapSnapshotBreakdownLabel(`${type}: ${name}`);
 	}
 
-	if (category === 'System objects') {
+	if (category === 'systemObjects') {
 		if (name.startsWith('system /')) return sanitizeHeapSnapshotBreakdownLabel(name);
 		if (name.startsWith('(system ')) return sanitizeHeapSnapshotBreakdownLabel(name);
 		return sanitizeHeapSnapshotBreakdownLabel(`${type}: ${name}`, type);
 	}
 
-	if (category === 'Other JS objects') {
+	if (category === 'otherJsObjects') {
 		if (type === 'object') return sanitizeHeapSnapshotBreakdownLabel(`object: ${name}`, 'object: unknown');
 		return type;
 	}
 
-	if (category === 'Other non-JS objects') {
+	if (category === 'otherNonJsObjects') {
 		if (type === 'native') return sanitizeHeapSnapshotBreakdownLabel(`native: ${name}`, 'native: unknown');
 		return sanitizeHeapSnapshotBreakdownLabel(`${type}: ${name}`, type);
 	}
 
-	if (category === 'Code') {
+	if (category === 'code') {
 		const lowerName = name.toLowerCase();
 		if (lowerName.includes('bytecode')) return 'bytecode';
 		if (lowerName.includes('builtin')) return 'builtins';
@@ -181,8 +167,8 @@ function classifyHeapSnapshotBreakdown(category, type, name) {
 	return sanitizeHeapSnapshotBreakdownLabel(`${type}: ${name}`, type);
 }
 
-function collapseHeapSnapshotBreakdown(breakdowns) {
-	const collapsed = {};
+function collapseHeapSnapshotBreakdown(breakdowns: Record<string, Record<string, number>>) {
+	const collapsed = {} as Record<string, Record<string, number>>;
 
 	for (const [category, children] of Object.entries(breakdowns)) {
 		const entries = Object.entries(children)
@@ -223,12 +209,16 @@ function analyzeHeapSnapshot(snapshot) {
 	const nodeTypeNames = meta.node_types?.[typeOffset];
 	if (!Array.isArray(nodeTypeNames)) throw new Error('Invalid heap snapshot node types');
 
+	function createEmptyHeapSnapshotCategoryMap() {
+		return Object.fromEntries(Object.keys(heapSnapshotCategory).map(category => [category, 0])) as Record<keyof typeof heapSnapshotCategory, number>;
+	}
+
 	const fieldCount = nodeFields.length;
 	const categories = createEmptyHeapSnapshotCategoryMap();
 	const nodeCounts = createEmptyHeapSnapshotCategoryMap();
 	const breakdowns = Object.fromEntries(
-		heapSnapshotCategories
-			.filter(category => category !== 'Total')
+		(Object.keys(heapSnapshotCategory) as (keyof typeof heapSnapshotCategory)[])
+			.filter(category => category !== 'total')
 			.map(category => [category, {}]),
 	);
 
@@ -243,9 +233,9 @@ function analyzeHeapSnapshot(snapshot) {
 		const category = classifyHeapSnapshotNode(type, name);
 
 		categories[category] += selfSize;
-		categories.Total += selfSize;
+		categories.total += selfSize;
 		nodeCounts[category]++;
-		nodeCounts.Total++;
+		nodeCounts.total++;
 		addValue(breakdowns[category], classifyHeapSnapshotBreakdown(category, type, name), selfSize);
 	}
 
@@ -306,7 +296,7 @@ async function getRuntimeMemoryUsage(serverProcess: ChildProcess) {
 	};
 }
 
-async function getHeapSnapshotStatistics(serverProcess: ChildProcess) {
+async function getHeapSnapshotStatistics(serverProcess: ChildProcess): Promise<HeapSnapshotData | null> {
 	if (!HEAP_SNAPSHOT) return null;
 
 	const snapshotPath = join(tmpdir(), `misskey-backend-heap-${process.pid}-${serverProcess.pid}-${Date.now()}.heapsnapshot`);
